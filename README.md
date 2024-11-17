@@ -65,7 +65,10 @@ This API is designed to manage job candidate data and integrates with PostgreSQL
    - Add unit and integration tests and set up a **CI/CD pipeline**.
 
 6. **Implement more test cases**  
-   - Add unit and integration tests and set up a **CI/CD pipeline**.
+   - Add more unit test coverage for the application.
+
+7. **Enhance Response Model**  
+   - Enhance the response model to include more information about the request status and errors.
 ---
 
 ## Time Spent
