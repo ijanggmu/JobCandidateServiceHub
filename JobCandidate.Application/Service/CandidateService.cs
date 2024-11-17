@@ -1,10 +1,11 @@
 ﻿using JobCandidate.Application.DTOs;
 using JobCandidate.Domain.Entities;
 using JobCandidate.Domain.Interfaces;
+using JobCandidate.Shared.Models;
 
 namespace JobCandidate.Application.Service
 {
-    public class CandidateService: ICandidateService
+    public class CandidateService : ICandidateService
     {
         private readonly ICandidateRepository _candidateRepository;
         private readonly ICacheRepository<Candidate> _cacheRepository;
@@ -15,12 +16,13 @@ namespace JobCandidate.Application.Service
             _cacheRepository = cacheRepository;
         }
 
-        public async Task CreateOrUpdateCandidateAsync(CandidateDTO requestModel)
+        public async Task<Result<string>> CreateOrUpdateCandidateAsync(CandidateDTO requestModel)
         {
             if (requestModel == null)
-                throw new ArgumentNullException(nameof(requestModel));
+                return Result<string>.Failure(["Request model is null"], 400);
 
             var cacheKey = $"candidate:{requestModel.Email}";
+
             Candidate existingCandidate;
 
             existingCandidate = _cacheRepository.Get(cacheKey);
@@ -48,6 +50,9 @@ namespace JobCandidate.Application.Service
                 await _candidateRepository.UpdateAsync(existingCandidate);
 
                 _cacheRepository.Set(cacheKey, existingCandidate);
+
+                return Result<string>.Success(null, "Candidate updated successfully");
+
             }
             else
             {
@@ -66,6 +71,7 @@ namespace JobCandidate.Application.Service
                 await _candidateRepository.AddAsync(candidate);
 
                 _cacheRepository.Set(cacheKey, candidate);
+                return Result<string>.Success(null, "Candidate created successfully");
             }
         }
     }

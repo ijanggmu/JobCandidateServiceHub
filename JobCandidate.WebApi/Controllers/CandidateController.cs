@@ -18,10 +18,12 @@ namespace JobCandidate.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateOrUpdateCandidate([FromBody] CandidateDTO candidate)
         {
-            if (candidate == null) return BadRequest("Invalid candidate data");
-
-            await _candidateService.CreateOrUpdateCandidateAsync(candidate);
-            return Ok();
+            var result = await _candidateService.CreateOrUpdateCandidateAsync(candidate);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return StatusCode(result.StatusCode, result);
         }
     }
 
