@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobCandidate.WebApi", "JobCandidate.WebApi\JobCandidate.WebApi.csproj", "{0B1433C7-E862-415A-913D-355034084B19}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobCandidate.WebApi", "JobCandidate.WebApi\JobCandidate.WebApi.csproj", "{0B1433C7-E862-415A-913D-355034084B19}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{400F36E8-1CAB-48AA-B285-4DBDC33CD716}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobCandidate.Domain", "JobCandidate.Domain\JobCandidate.Domain.csproj", "{7AE8B302-3CE5-4594-97F3-66D0CCB49EC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobCandidate.Domain", "JobCandidate.Domain\JobCandidate.Domain.csproj", "{7AE8B302-3CE5-4594-97F3-66D0CCB49EC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobCandidate.Infrastructure", "JobCandidate.Infrastructure\JobCandidate.Infrastructure.csproj", "{76F74551-7446-44A7-B717-8C7968B59E81}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobCandidate.Infrastructure", "JobCandidate.Infrastructure\JobCandidate.Infrastructure.csproj", "{76F74551-7446-44A7-B717-8C7968B59E81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobCandidate.Application", "JobCandidate.Application\JobCandidate.Application.csproj", "{D457A45E-E7DF-48F0-8952-E73CC32307CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobCandidate.Application", "JobCandidate.Application\JobCandidate.Application.csproj", "{D457A45E-E7DF-48F0-8952-E73CC32307CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobCandidate.Tests", "JobCandidate.Tests\JobCandidate.Tests.csproj", "{3C1DD078-AF96-4FEF-9320-B0FE8F32D27D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{D457A45E-E7DF-48F0-8952-E73CC32307CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D457A45E-E7DF-48F0-8952-E73CC32307CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D457A45E-E7DF-48F0-8952-E73CC32307CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C1DD078-AF96-4FEF-9320-B0FE8F32D27D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C1DD078-AF96-4FEF-9320-B0FE8F32D27D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C1DD078-AF96-4FEF-9320-B0FE8F32D27D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C1DD078-AF96-4FEF-9320-B0FE8F32D27D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,6 +50,7 @@ Global
 		{7AE8B302-3CE5-4594-97F3-66D0CCB49EC6} = {400F36E8-1CAB-48AA-B285-4DBDC33CD716}
 		{76F74551-7446-44A7-B717-8C7968B59E81} = {400F36E8-1CAB-48AA-B285-4DBDC33CD716}
 		{D457A45E-E7DF-48F0-8952-E73CC32307CC} = {400F36E8-1CAB-48AA-B285-4DBDC33CD716}
+		{3C1DD078-AF96-4FEF-9320-B0FE8F32D27D} = {400F36E8-1CAB-48AA-B285-4DBDC33CD716}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6FC4DDC1-8A42-4267-BC18-438627A746C2}
