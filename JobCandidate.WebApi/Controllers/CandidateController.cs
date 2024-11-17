@@ -8,9 +8,9 @@ namespace JobCandidate.WebApi.Controllers
     [Route("api/[controller]")]
     public class CandidateController : ControllerBase
     {
-        private readonly CandidateService _candidateService;
+        private readonly ICandidateService _candidateService;
 
-        public CandidateController(CandidateService candidateService)
+        public CandidateController(ICandidateService candidateService)
         {
             _candidateService = candidateService;
         }
