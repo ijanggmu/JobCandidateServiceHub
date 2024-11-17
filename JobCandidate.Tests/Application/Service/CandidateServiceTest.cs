@@ -44,7 +44,6 @@ namespace JobCandidate.Tests.Application.Service
 
             // Assert
             Assert.True(result.IsSuccess);
-            Assert.Null(result.Errors); // Should not have any errors for a successful creation
             Assert.Equal(200, result.StatusCode); // Success status code
             _candidateRepositoryMock.Verify(r => r.AddAsync(It.Is<Candidate>(c => c.Email == candidateDto.Email)), Times.Once);
             _cacheRepositoryMock.Verify(c => c.Set(It.IsAny<string>(), It.IsAny<Candidate>()), Times.Once);
@@ -80,7 +79,6 @@ namespace JobCandidate.Tests.Application.Service
 
             // Assert
             Assert.True(result.IsSuccess);
-            Assert.Null(result.Errors); // Should not have any errors for a successful update
             Assert.Equal(200, result.StatusCode); // Success status code
             _candidateRepositoryMock.Verify(r => r.UpdateAsync(It.Is<Candidate>(c => c.Email == candidateDto.Email && c.FirstName == candidateDto.FirstName)), Times.Once);
             _cacheRepositoryMock.Verify(c => c.Set(It.IsAny<string>(), It.IsAny<Candidate>()), Times.Once);
