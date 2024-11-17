@@ -3,6 +3,7 @@ using JobCandidate.Application.Service;
 using JobCandidate.Domain.Entities;
 using JobCandidate.Domain.Interfaces;
 using Moq;
+using Xunit;
 
 namespace JobCandidate.Tests.Application.Service
 {
@@ -39,9 +40,12 @@ namespace JobCandidate.Tests.Application.Service
             _candidateRepositoryMock.Setup(r => r.GetByEmailAsync(candidateDto.Email)).ReturnsAsync((Candidate)null);
 
             // Act
-            await _candidateService.CreateOrUpdateCandidateAsync(candidateDto);
+            var result = await _candidateService.CreateOrUpdateCandidateAsync(candidateDto);
 
             // Assert
+            Assert.True(result.IsSuccess);
+            Assert.Null(result.Errors); // Should not have any errors for a successful creation
+            Assert.Equal(200, result.StatusCode); // Success status code
             _candidateRepositoryMock.Verify(r => r.AddAsync(It.Is<Candidate>(c => c.Email == candidateDto.Email)), Times.Once);
             _cacheRepositoryMock.Verify(c => c.Set(It.IsAny<string>(), It.IsAny<Candidate>()), Times.Once);
         }
@@ -72,22 +76,29 @@ namespace JobCandidate.Tests.Application.Service
             _cacheRepositoryMock.Setup(c => c.Get(It.IsAny<string>())).Returns(existingCandidate);
 
             // Act
-            await _candidateService.CreateOrUpdateCandidateAsync(candidateDto);
+            var result = await _candidateService.CreateOrUpdateCandidateAsync(candidateDto);
 
             // Assert
+            Assert.True(result.IsSuccess);
+            Assert.Null(result.Errors); // Should not have any errors for a successful update
+            Assert.Equal(200, result.StatusCode); // Success status code
             _candidateRepositoryMock.Verify(r => r.UpdateAsync(It.Is<Candidate>(c => c.Email == candidateDto.Email && c.FirstName == candidateDto.FirstName)), Times.Once);
             _cacheRepositoryMock.Verify(c => c.Set(It.IsAny<string>(), It.IsAny<Candidate>()), Times.Once);
         }
 
         [Fact]
-        public async Task CreateOrUpdateCandidateAsync_ShouldNotAddOrUpdateCandidate_WhenCandidateDtoIsNull()
+        public async Task CreateOrUpdateCandidateAsync_ShouldReturnFailure_WhenCandidateDtoIsNull()
         {
             // Arrange
             CandidateDTO? candidateDto = null;
 
-            // Act & Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(() => _candidateService.CreateOrUpdateCandidateAsync(candidateDto));
+            // Act
+            var result = await _candidateService.CreateOrUpdateCandidateAsync(candidateDto);
 
+            // Assert
+            Assert.False(result.IsSuccess);
+            Assert.NotEmpty(result.Errors); // Should contain errors
+            Assert.Equal(400, result.StatusCode); // Bad Request status code
             _candidateRepositoryMock.Verify(r => r.AddAsync(It.IsAny<Candidate>()), Times.Never);
             _candidateRepositoryMock.Verify(r => r.UpdateAsync(It.IsAny<Candidate>()), Times.Never);
             _cacheRepositoryMock.Verify(c => c.Set(It.IsAny<string>(), It.IsAny<Candidate>()), Times.Never);

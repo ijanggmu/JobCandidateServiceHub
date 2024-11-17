@@ -51,7 +51,7 @@ namespace JobCandidate.Application.Service
 
                 _cacheRepository.Set(cacheKey, existingCandidate);
 
-                return Result<string>.Success(null, "Candidate updated successfully");
+                return Result<string>.Success("Candidate updated successfully");
 
             }
             else
@@ -71,7 +71,7 @@ namespace JobCandidate.Application.Service
                 await _candidateRepository.AddAsync(candidate);
 
                 _cacheRepository.Set(cacheKey, candidate);
-                return Result<string>.Success(null, "Candidate created successfully");
+                return Result<string>.Success("Candidate created successfully");
             }
         }
     }

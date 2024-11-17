@@ -4,8 +4,11 @@ using JobCandidate.Domain.Interfaces;
 using JobCandidate.Infrastructure.Caching;
 using JobCandidate.Infrastructure.Persistence;
 using JobCandidate.Infrastructure.Repositories;
+using JobCandidate.Shared.Models;
 using JobCandidate.WebApi.Extension;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +27,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-builder.Services.AddProblemDetails();
+builder.Services.AddProblemDetails(options =>
+{
+});
+
+
 
 
 var app = builder.Build();

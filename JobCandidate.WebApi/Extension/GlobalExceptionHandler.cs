@@ -1,44 +1,65 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using System.Net;
 using System.Text.Json;
+using JobCandidate.Shared.Models;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 
 namespace JobCandidate.WebApi.Extension
 {
     public class GlobalExceptionHandler : IExceptionHandler
     {
         private readonly ILogger<GlobalExceptionHandler> _logger;
-        private readonly IServiceProvider _serviceProvider;
 
-        public GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger, IServiceProvider serviceProvider)
+        public GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
         {
             _logger = logger;
-            _serviceProvider = serviceProvider;
         }
 
         public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
         {
-
             _logger.LogError("Exception occurred: {@Exception}, Type: {@Type}, UserName: {@UserName}, UserId: {@UserId}, Ip: {@Ip}",
                 exception,
                 "API");
 
             httpContext.Response.ContentType = "application/json";
-            var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
-            string errorMessage;
             int statusCode;
+            string title;
+            var errors = new Dictionary<string, string[]>(); 
 
-            statusCode = (int)HttpStatusCode.InternalServerError;
-            errorMessage = "An internal server error occurred.";
-
-            httpContext.Response.StatusCode = statusCode;
-            var response = new
+            if (exception is ValidationException validationException)
             {
-                statusCode,
-                errorMessage
+                statusCode = (int)HttpStatusCode.BadRequest;
+                title = "One or more validation errors occurred.";
+                errors.Add("Comments", new[] { validationException.Message });
+            }
+            else
+            {
+                statusCode = (int)HttpStatusCode.InternalServerError;
+                title = "An unexpected error occurred.";
+            }
+
+            var problemDetails = new ProblemDetails
+            {
+                Status = statusCode,
+                Title = title,
+                Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+                Detail = errors.Count > 0 ? null : "Please refer to the error description.",
+                Extensions =
+                {
+                    ["errors"] = errors
+                }
             };
-            var json = JsonSerializer.Serialize(response, options);
-            await httpContext.Response.WriteAsync(json, cancellationToken);
+
+            problemDetails.Extensions["traceId"] = httpContext.TraceIdentifier;
+
+            var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+            var jsonResponse = JsonSerializer.Serialize(problemDetails, options);
+            httpContext.Response.StatusCode = statusCode;
+
+            await httpContext.Response.WriteAsync(jsonResponse, cancellationToken);
+
             return true;
         }
     }
