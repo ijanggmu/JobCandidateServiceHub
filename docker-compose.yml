@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  jobcandidate.webapi:
+    image: ${DOCKER_REGISTRY-}jobcandidatewebapi
+    build:
+      context: .
+      dockerfile: JobCandidate.WebApi/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=jobcandidate-db;Port=5432;Database=jobcandidate_db;Username=jobcandidate_user;Password=jobcandidate_password
+    ports:
+      - "5000:80"
+    depends_on:
+      - jobcandidate-db
+    networks:
+      - jobcandidate-network
+  
+  jobcandidate-db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=jobcandidate_db
+      - POSTGRES_USER=jobcandidate_user
+      - POSTGRES_PASSWORD=jobcandidate_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - jobcandidate-db-data:/var/lib/postgresql/data
+    networks:
+      - jobcandidate-network
+
+networks:
+  jobcandidate-network:
+    driver: bridge
+
+volumes:
+  jobcandidate-db-data:
+    driver: local
