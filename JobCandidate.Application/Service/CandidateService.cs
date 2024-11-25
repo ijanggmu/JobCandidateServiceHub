@@ -25,17 +25,7 @@ namespace JobCandidate.Application.Service
 
             Candidate existingCandidate;
 
-            existingCandidate = _cacheRepository.Get(cacheKey);
-
-            if (existingCandidate == null)
-            {
-                existingCandidate = await _candidateRepository.GetByEmailAsync(requestModel.Email);
-
-                if (existingCandidate != null)
-                {
-                    _cacheRepository.Set(cacheKey, existingCandidate);
-                }
-            }
+            existingCandidate = _cacheRepository.Get(cacheKey) ?? await _candidateRepository.GetByEmailAsync(requestModel.Email);
 
             if (existingCandidate != null)
             {
@@ -52,27 +42,23 @@ namespace JobCandidate.Application.Service
                 _cacheRepository.Set(cacheKey, existingCandidate);
 
                 return Result<string>.Success("Candidate updated successfully");
-
             }
-            else
+            var candidate = new Candidate
             {
-                var candidate = new Candidate
-                {
-                    FirstName = requestModel.FirstName,
-                    LastName = requestModel.LastName,
-                    PhoneNumber = requestModel.PhoneNumber,
-                    CallTimeInterval = requestModel.CallTimeInterval,
-                    LinkedInProfileUrl = requestModel.LinkedInProfileUrl,
-                    GitHubProfileUrl = requestModel.GitHubProfileUrl,
-                    Comments = requestModel.Comments,
-                    Email = requestModel.Email
-                };
+                FirstName = requestModel.FirstName,
+                LastName = requestModel.LastName,
+                PhoneNumber = requestModel.PhoneNumber,
+                CallTimeInterval = requestModel.CallTimeInterval,
+                LinkedInProfileUrl = requestModel.LinkedInProfileUrl,
+                GitHubProfileUrl = requestModel.GitHubProfileUrl,
+                Comments = requestModel.Comments,
+                Email = requestModel.Email
+            };
 
-                await _candidateRepository.AddAsync(candidate);
+            await _candidateRepository.AddAsync(candidate);
 
-                _cacheRepository.Set(cacheKey, candidate);
-                return Result<string>.Success("Candidate created successfully");
-            }
+            _cacheRepository.Set(cacheKey, candidate);
+            return Result<string>.Success("Candidate created successfully");
         }
     }
 }
