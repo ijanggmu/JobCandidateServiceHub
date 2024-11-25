@@ -9,13 +9,13 @@ namespace JobCandidate.Tests.Application.Service
 {
     public class CandidateServiceTests
     {
-        private readonly Mock<ICandidateRepository> _candidateRepositoryMock;
+        private readonly Mock<ICandidateRepository<Candidate>> _candidateRepositoryMock;
         private readonly Mock<ICacheRepository<Candidate>> _cacheRepositoryMock;
         private readonly CandidateService _candidateService;
 
         public CandidateServiceTests()
         {
-            _candidateRepositoryMock = new Mock<ICandidateRepository>();
+            _candidateRepositoryMock = new Mock<ICandidateRepository<Candidate>>();
             _cacheRepositoryMock = new Mock<ICacheRepository<Candidate>>();
             _candidateService = new CandidateService(_candidateRepositoryMock.Object, _cacheRepositoryMock.Object);
         }
@@ -37,7 +37,7 @@ namespace JobCandidate.Tests.Application.Service
             };
 
             _cacheRepositoryMock.Setup(c => c.Get(It.IsAny<string>())).Returns((Candidate)null);
-            _candidateRepositoryMock.Setup(r => r.GetByEmailAsync(candidateDto.Email)).ReturnsAsync((Candidate)null);
+            _candidateRepositoryMock.Setup(r => r.GetByEmailAsync(a=>a.Email == candidateDto.Email)).ReturnsAsync((Candidate)null);
 
             // Act
             var result = await _candidateService.CreateOrUpdateCandidateAsync(candidateDto);

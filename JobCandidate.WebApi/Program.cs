@@ -17,7 +17,7 @@ builder.Services.AddDbContext<CandidateDbContext>(opt =>
 
 builder.Services.AddMemoryCache();
 
-builder.Services.AddScoped<ICandidateRepository, CandidateRepository>();
+builder.Services.AddScoped<ICandidateRepository<Candidate>, CandidateRepository<Candidate>>();
 builder.Services.AddScoped<ICacheRepository<Candidate>, CacheRepository<Candidate>>();
 
 builder.Services.AddScoped<ICandidateService, CandidateService>();

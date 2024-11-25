@@ -7,10 +7,10 @@ namespace JobCandidate.Application.Service
 {
     public class CandidateService : ICandidateService
     {
-        private readonly ICandidateRepository _candidateRepository;
+        private readonly ICandidateRepository<Candidate> _candidateRepository;
         private readonly ICacheRepository<Candidate> _cacheRepository;
 
-        public CandidateService(ICandidateRepository candidateRepository, ICacheRepository<Candidate> cacheRepository)
+        public CandidateService(ICandidateRepository<Candidate> candidateRepository, ICacheRepository<Candidate> cacheRepository)
         {
             _candidateRepository = candidateRepository;
             _cacheRepository = cacheRepository;
@@ -25,7 +25,8 @@ namespace JobCandidate.Application.Service
 
             Candidate existingCandidate;
 
-            existingCandidate = _cacheRepository.Get(cacheKey) ?? await _candidateRepository.GetByEmailAsync(requestModel.Email);
+            var exisCandidate = _cacheRepository.Get(cacheKey);
+            existingCandidate =  await _candidateRepository.GetByEmailAsync(a=>a.Email == requestModel.Email);
 
             if (existingCandidate != null)
             {

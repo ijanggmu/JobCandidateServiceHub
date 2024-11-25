@@ -1,17 +1,14 @@
-﻿using JobCandidate.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 
 namespace JobCandidate.Domain.Interfaces
 {
-    public interface ICandidateRepository
+    public interface ICandidateRepository<T> where T : class
     {
-        Task<Candidate> GetByEmailAsync(string email);
-        Task AddAsync(Candidate candidate);
-        Task UpdateAsync(Candidate candidate);
+          
+        Task<T> GetByEmailAsync(Expression<Func<T, bool>> predicate);
+        Task AddAsync(T candidate);
+        Task UpdateAsync(T candidate);
+        Task SaveChangesAsync();
     }
 
 }
